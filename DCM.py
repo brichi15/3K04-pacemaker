@@ -5,7 +5,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from Modes import PARAMETER_SCREEN
+from Modes import PARAMETER_SCREEN 
 
 
 LoginScreen = Tk()
@@ -24,6 +24,19 @@ E4 = ttk.Entry(RegisterFrame, show="*")             #Password
 E5 = ttk.Entry(RegisterFrame)                       #Verify Username
 E6 = ttk.Entry(RegisterFrame, show="*")             #Verify Password
 
+def Initialize_User(Username):
+    Par_File = open("Parameters.txt","r")
+    Parameters = Par_File.readlines()
+    Par_File.close()
+
+    user_file = open(Username,"w").close()
+    user_file = open(Username,"a")
+    for i in range(0,len(Parameters)):
+        user_file.write(Parameters[i][:-1])
+        user_file.write(": ")
+        user_file.write("")
+        user_file.write("\n")
+    user_file.close()
 
 
 #validate alpha numeric only
@@ -45,17 +58,16 @@ def Create_New_User(Username, Password):                                    #Cre
 
 
 def Search_Username(Username):                                         #Finds Password for User
-    a = True
     Login_File = open("login.txt","r")
     Users = Login_File.readlines()
     if len(Users) == 0:
         return False
     for User in Users:
         Current = User.split(" ")
-        if Current[0] != Username:
-            a = False
+        if Current[0] == Username:
+            return True
     Login_File.close()
-    return a
+    return False
 
 def Check_Cred(Username,Password):
     Login_File = open("login.txt","r")
@@ -65,7 +77,7 @@ def Check_Cred(Username,Password):
         if Current[0] == Username and Current[1] == Password:
             messagebox.showinfo("Login", "You are logged in!")
             LoginScreen.destroy()
-            PARAMETER_SCREEN()
+            PARAMETER_SCREEN(Username)
             return True
     messagebox.showerror("Invalid Credentials", "Username or Password is incorrect")
     E1.delete(0,END)
@@ -97,12 +109,15 @@ def Register(Username1, Password1, Username2, Password2):
         E5.delete(0,END)
         E6.delete(0,END)
         return
+    print(Search_Username(Username1))
     if Search_Username(Username1) == False:
-        
         messagebox.showinfo("Login", "User Created. You are logged in!")
         LoginScreen.destroy()
-        PARAMETER_SCREEN()
+
+        Initialize_User(Username1)
         Create_New_User(Username1,Password1)
+        PARAMETER_SCREEN(Username2)
+
     else:
         messagebox.showerror("Invalid Credentials", "This user already exists")
         E1.delete(0,END)
