@@ -1,0 +1,19 @@
+Mode,Lower Rate Limit,Upper Rate Limit,Maximum Sensor Rate,Fixed AV Delay,Dynamic AV Delay,Sensed AV Delay Offset,Atrial Amplitude,Ventricular Amplitude,Atrial Pulse Width,Ventricular Pulse Width,Atrial Sensitivity,Ventricular Sensitivity,VRP,ARP,PVARP,PVARP Extension,Hysteresis,Rate Smoothing,ATR Duration,ATR Fallback Mode,ATR Fallback Time,Activity Threshold,Reaction Time,Response Factor,Recovery Time
+AAT,X,X,,,,,X,,X,,X,,,X,X,,,,,,,,,,
+VVT,X,X,,,,,,X,,X,,X,X,,,,,,,,,,,,
+AOO,X,X,,,,,X,,X,,,,,,,,,,,,,,,,
+AAI,X,X,,,,,X,,X,,X,,,X,X,,X,X,,,,,,,
+VOO,X,X,,,,,,X,,X,,,,,,,,,,,,,,,
+VVI,X,X,,,,,,X,,X,,X,X,,,,X,X,,,,,,,
+VDD,X,X,,X,X,,,X,,X,,X,X,,,X,,X,X,X,X,,,,
+DOO,X,X,,X,,,X,X,X,X,,,,,,,,,,,,,,,
+DDI,X,X,,X,,,X,X,X,X,X,X,X,X,X,,,,,,,,,,
+DDD,X,X,,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,,,,
+AOOR,X,X,X,,,,X,,X,,,,,,,,,,,,,X,X,X,X
+AAIR,X,X,X,,,,X,,X,,X,,,X,X,,X,X,,,,X,X,X,X
+VOO,X,X,X,,,,,X,,X,,,,,,,,,,,,X,X,X,X
+VVIR,X,X,X,,,,,X,,X,,X,X,,,,X,X,,,,X,X,X,X
+VDDR,X,X,X,X,X,,,X,,X,,X,X,,,X,,X,X,X,X,X,X,X,X
+DOOR,X,X,X,X,,,X,X,X,X,,,,,,,,,,,,X,X,X,X
+DDIR,X,X,X,X,,,X,X,X,X,X,X,X,X,X,,,,,,,X,X,X,X
+DDDD,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X

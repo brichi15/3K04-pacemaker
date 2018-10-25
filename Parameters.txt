@@ -1,0 +1,25 @@
+Lower Rate Limit
+Upper Rate Limit
+Maximum Sensor Rate
+Fixed AV Delay
+Dynamic AV Delay
+Sensed AV Delay Offset
+Atrial Amplitude
+Ventricular Amplitude
+Atrial Pulse Width
+Ventricular Pulse Width
+Atrial Sensitivity
+Ventricular Sensitivity
+VRP
+ARP
+PVARP
+PVARP Extension
+Hysteresis
+Rate Smoothing
+ATR Duration
+ATR Fallback Mode
+ATR Fallback Time
+Activity Threshold
+Reaction Time
+Response Factor
+Recovery Time
