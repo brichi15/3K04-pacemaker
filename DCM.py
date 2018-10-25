@@ -7,6 +7,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from Modes import PARAMETER_SCREEN
 
+
 LoginScreen = Tk()
 LoginScreen.title("PACEMAKER DCM")
 LoginScreen.geometry("270x350")
@@ -76,6 +77,17 @@ def Check_Cred(Username,Password):
     Login_File.close()
 
 def Register(Username1, Password1, Username2, Password2):
+    Login_File = open("login.txt","r")
+    Users = Login_File.readlines()
+    if len(Users)>=10:
+        messagebox.showerror("Error", "Maximum number of users registered")
+        E1.delete(0,END)
+        E2.delete(0,END)
+        E3.delete(0,END)
+        E4.delete(0,END)
+        E5.delete(0,END)
+        E6.delete(0,END)
+        return
     if Username1 != Username2 or Password1 != Password2:
         messagebox.showerror("Invalid Credentials", "Username or Password do not match")
         E1.delete(0,END)
@@ -86,6 +98,7 @@ def Register(Username1, Password1, Username2, Password2):
         E6.delete(0,END)
         return
     if Search_Username(Username1) == False:
+        
         messagebox.showinfo("Login", "User Created. You are logged in!")
         LoginScreen.destroy()
         PARAMETER_SCREEN()
@@ -116,7 +129,7 @@ def LOGIN_SCREEN():
 
 
    
-    B1 = ttk.Button(LoginFrame, text="Login",command=lambda a:Check_Cred(E1.get(),E2.get()))
+    B1 = ttk.Button(LoginFrame, text="Login",command=lambda :Check_Cred(E1.get(),E2.get()))
 
     #Place Widgets
     E1.place(x=110, y=5)
