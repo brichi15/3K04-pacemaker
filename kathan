@@ -1,25 +1,26 @@
-Lower Rate Limit: 
-Upper Rate Limit: 
-Maximum Sensor Rate: 
-Fixed AV Delay: 
-Dynamic AV Delay: 
-Sensed AV Delay Offset: 
-Atrial Amplitude: 
-Ventricular Amplitude: 
-Atrial Pulse Width: 
-Ventricular Pulse Width: 
-Atrial Sensitivity: 
-Ventricular Sensitivity: 
-VRP: 
-ARP: 
-PVARP: 
-PVARP Extension: 
-Hysteresis: 
-Rate Smoothing: 
-ATR Duration: 
-ATR Fallback Mode: 
-ATR Fallback Time: 
-Activity Threshold: 
-Reaction Time: 
-Response Factor: 
-Recovery Time: 
+Mode: DDD
+Lower Rate Limit: 55
+Upper Rate Limit: 95
+Maximum Sensor Rate: 70
+Fixed AV Delay: 120
+Dynamic AV Delay: OFF
+Sensed AV Delay Offset: 80
+Atrial Amplitude: -20
+Ventricular Amplitude: 0.6
+Atrial Pulse Width: 5.0
+Ventricular Pulse Width: 0.6
+Atrial Sensitivity: 3.5
+Ventricular Sensitivity: 210
+VRP: 210
+ARP: 230
+PVARP: OFF
+PVARP Extension: 45
+Hysteresis: 6
+Rate Smoothing: OFF
+ATR Duration: 100
+ATR Fallback Mode: 5
+ATR Fallback Time: 60
+Activity Threshold: Med-Low
+Reaction Time: 50
+Response Factor: 10
+Recovery Time: 59

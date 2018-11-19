@@ -1,3 +1,4 @@
+Mode
 Lower Rate Limit
 Upper Rate Limit
 Maximum Sensor Rate

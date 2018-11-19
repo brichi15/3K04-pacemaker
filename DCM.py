@@ -7,6 +7,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from Modes import PARAMETER_SCREEN 
+from serial import *
 
 
 LoginScreen = Tk()
