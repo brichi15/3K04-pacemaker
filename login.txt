@@ -6,5 +6,5 @@ c c
 d d
 f f
 g h
-j h4 6
+j h4
 3 3

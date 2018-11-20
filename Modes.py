@@ -7,7 +7,8 @@ from tkinter import ttk
 from tkinter import messagebox
 import numpy
 import matplotlib
-
+from PIL import Image
+from PIL import ImageTk
 
 import csv
 
@@ -75,7 +76,7 @@ def validcmd(wid,arr):
             return True
     wid.config(background="#ff8080")
     return False
-        
+
 
 def Activate_Entries(Mode):
     for Current in Activate:
@@ -102,38 +103,46 @@ def Load_Values(Username):
     a =""
     for i in range(0,len(Parameters)):
         Parameter_Entries[i].delete(0,END)
-        a = p[i][p[i].find(": ")+2:-1]  
+        a = p[i][p[i].find(": ")+2:-1]
         Parameter_Entries[i].insert(0,a)
-        
-        
+
+
 def PARAMETER_SCREEN(Username):
     ParameterScreen = Tk()
     ParameterScreen.title("Pacemaker Parameters")
     ParameterScreen.geometry("850x330")
 
-    Connect_Button = Button(ParameterScreen,text="CONNECTED", fg="green") ##Not Connected to BOARD BUTTON DOES NOT WORK
-    Status_Button = Button(ParameterScreen,text="CONNECTED TO PRECONFIGURED DEVICE",fg="green")
     Save_Button = ttk.Button(ParameterScreen,text="Save",command=lambda: Values_To_File(Username))
-
-    Connect_Button.place(x=350,y=10)
-    Status_Button.place(x=500,y=10)
+    Load_Button = ttk.Button(ParameterScreen,text="Load",command=lambda: Load_Values(Username))
+    Load_Button.place(x=95,y=290)
     Save_Button.place(x=15,y=290)
-    
-    
-    
+
+    green = ImageTk.PhotoImage(Image.open('icons/green_button.png').resize((25,25),Image.ANTIALIAS))
+    red = ImageTk.PhotoImage(Image.open('icons/red_button.png').resize((25,25),Image.ANTIALIAS))
+
+    cON = Label(ParameterScreen, image=green)
+    configON = Label(ParameterScreen, image=green)
+    cLabel = Label(ParameterScreen, text='CONNECTED')
+    configLabel = Label(ParameterScreen, text='CONNECTED TO PRECONFIGURED DEVICE')
+
+    cON.place(x=300,y=10)
+    cLabel.place(x=350, y=13)
+    configON.place(x=450, y=10)
+    configLabel.place(x=500,y=13)
+
     #Generate Entires and Labels
     VAR = []
     VAR.append(StringVar())
     Parameter_Entries.append(Spinbox(ParameterScreen,values=RANGE_INC[0],command=lambda : Activate_Entries(Parameter_Entries[0].get())))
     Parameter_Labels.append(Label(ParameterScreen,text=Parameters[0][:-1]))
-    
-    
-    
+
+
+
     for i in range(1,26):
         VAR.append(StringVar())
         Parameter_Entries.append(Spinbox(ParameterScreen,buttondownrelief=GROOVE,buttonuprelief=GROOVE,textvariable=VAR[i],values=RANGE_INC[i]))
         Parameter_Labels.append(Label(ParameterScreen,text=Parameters[i][:-1]))
-    
+
     VAR[1].trace('w',lambda a,b,c:validcmd(Parameter_Entries[1],RANGE_INC[1]))
     VAR[2].trace('w',lambda a,b,c:validcmd(Parameter_Entries[2],RANGE_INC[2]))
     VAR[3].trace('w',lambda a,b,c:validcmd(Parameter_Entries[3],RANGE_INC[3]))
@@ -159,14 +168,14 @@ def PARAMETER_SCREEN(Username):
     VAR[23].trace('w',lambda a,b,c:validcmd(Parameter_Entries[23],RANGE_INC[23]))
     VAR[24].trace('w',lambda a,b,c:validcmd(Parameter_Entries[24],RANGE_INC[24]))
     VAR[25].trace('w',lambda a,b,c:validcmd(Parameter_Entries[25],RANGE_INC[25]))
-       
+
 
 
     #Parameter_Entries[0].config(command=lambda : Activate_Entries(Parameter_Entries[0].get()))
     Load_Values(Username)
     Parameter_Entries[0].config(state="readonly")
 
-    
+
     xm = 0
     ym = -1
 
@@ -182,8 +191,8 @@ def PARAMETER_SCREEN(Username):
         #Parameter_Entries[j].config(validate="key",validatecommand=(valinp,"%P"))
         Parameter_Labels[j].place(x=15+280*xm,y=(j+ym)*30+50)
         Parameter_Entries[j].place(x=145+280*xm,y=(j+ym)*30+50)
-    
-    
+
+
 
     #variable = StringVar(ParameterScreen)
     #Mode_Select = ttk.OptionMenu(ParameterScreen, variable,*Modes,command= lambda a :Activate_Entries(variable.get()))
@@ -192,8 +201,7 @@ def PARAMETER_SCREEN(Username):
 
     #Mode_Select.place(x=30,y=10)
 
-                                 
+
     mainloop()
 
 PARAMETER_SCREEN("kathan")
-

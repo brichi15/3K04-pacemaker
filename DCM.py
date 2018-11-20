@@ -1,14 +1,15 @@
 ##GROUP ##: PACEMAKER
 ##DCM
 
-#comment 
+#comment
 
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from Modes import PARAMETER_SCREEN 
+from Modes import PARAMETER_SCREEN
 from serial import *
-
+from PIL import Image
+from PIL import ImageTk
 
 LoginScreen = Tk()
 LoginScreen.title("PACEMAKER DCM")
@@ -134,7 +135,7 @@ def Register(Username1, Password1, Username2, Password2):
 
 def LOGIN_SCREEN():
 
-    
+
 
     LoginFrame.place(x=10,y=5)
     RegisterFrame.place(x=10,y=150)
@@ -145,7 +146,7 @@ def LOGIN_SCREEN():
     L2 = Label(LoginFrame, text="Password: ").place(x=5,y=30)
 
 
-   
+
     B1 = ttk.Button(LoginFrame, text="Login",command=lambda :Check_Cred(E1.get(),E2.get()))
 
     #Place Widgets
@@ -160,7 +161,7 @@ def LOGIN_SCREEN():
     L5 = Label(RegisterFrame, text="Verify Username: ").place(x=5,y=60)
     L6 = Label(RegisterFrame, text="Verify Password: ").place(x=5,y=85)
 
-    
+
 
     B2 = ttk.Button(RegisterFrame, text="Register", command=lambda : Register(E3.get(),E4.get(),E5.get(),E6.get()))
     #B3 = ttk.Button(RegisterFrame, text="Register", command=lambda : Modes.PARAMETER_SCREEN()
@@ -185,4 +186,3 @@ def LOGIN_SCREEN():
     mainloop()
 
 LOGIN_SCREEN()
-
