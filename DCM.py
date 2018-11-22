@@ -32,12 +32,14 @@ def Initialize_User(Username):
     Parameters = Par_File.readlines()
     Par_File.close()
 
-    user_file = open(Username,"w").close()
-    user_file = open(Username,"a")
+    # default values of parameters
+    defaultValues = ['DDD','60','120','120','150','OFF','OFF','3.5','3.5','0.4','0.4','0.75','2.5','320','250','250','OFF','OFF','OFF','20','OFF','1','Med','30','8','5']
+    user_file = open('userdata/'+Username,"w").close()
+    user_file = open('userdata/'+Username,"a")
     for i in range(0,len(Parameters)):
         user_file.write(Parameters[i][:-1])
         user_file.write(": ")
-        user_file.write("")
+        user_file.write(defaultValues[i])
         user_file.write("\n")
     user_file.close()
 

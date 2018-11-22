@@ -17,32 +17,58 @@ import csv
 Modes = []
 Activate = []
 RANGE_INC = []
+#Mode
 RANGE_INC.append("OFF DDD VDD DDI DOO AOO AAI VOO VVI AAT VVT DDDR VDDR DDIR DOOR AOOR AAIR VOOR VVIR".split())
+#Lower Rate Limit
 RANGE_INC.append(list(numpy.arange(30,50,5))+list(numpy.arange(50,90,1))+list(numpy.arange(90,176,5)))
+#Upper Rate LImit
 RANGE_INC.append(list(numpy.arange(50,176,5)))
+#MSR
 RANGE_INC.append(list(numpy.arange(50,176,5)))
+#FixedAV
 RANGE_INC.append(list(numpy.arange(70,301,10)))
+#Dynamic AV Delay
 RANGE_INC.append(["ON","OFF"])
-RANGE_INC.append(list(numpy.arange(30,100,10)))
+#Sensed AV
 RANGE_INC.append(["OFF"]+(list(numpy.arange(-10,-100,-10))))
+#Atrial Amplitude
 RANGE_INC.append(["OFF"]+(list(numpy.arange(0.5,3.3,0.1)))+(list(numpy.arange(3.5,7.1,0.5))))
-RANGE_INC.append(["OFF",1.25,2.5,3.75,5.0])
+#Ventricular Amplitude
+RANGE_INC.append(list(numpy.arange(3.5,7.1,0.5)))
+#Atrial Pulse width
 RANGE_INC.append([0.05]+(list(numpy.arange(0.1,2.1,0.1))))
-RANGE_INC.append([0.25,0.5,0.75]+(list(numpy.arange(1,10.1,0.5))))
+#Ventricular Pulse width
+RANGE_INC.append(list(numpy.arange(0.1,2.0,0.1)))
+#Atrial Sensitivity
+RANGE_INC.append([0.25,0.5,0.75])
+#Ventricular Sensitivity
+RANGE_INC.append(list(numpy.arange(1.0,10.1,0.5)))
+#VRP
 RANGE_INC.append(list(numpy.arange(150,501,10)))
+#ARP
 RANGE_INC.append(list(numpy.arange(150,501,10)))
+#PVARP
 RANGE_INC.append(list(numpy.arange(150,501,10)))
+#PVARP Extension
 RANGE_INC.append(["OFF"]+(list(numpy.arange(50,401,50))))
-RANGE_INC.append(list(numpy.arange(30,50,5))+list(numpy.arange(50,90,1))+list(numpy.arange(90,176,5)))
+#Hysteresis
+RANGE_INC.append(["OFF"]+list(numpy.arange(30,50,5))+list(numpy.arange(50,90,1))+list(numpy.arange(90,176,5)))
+#Rate Smoothing
 RANGE_INC.append(["OFF",3,6,9,12,15,18,21,25])
-RANGE_INC.append(["ON","OFF"])
+#ATR Duration
 RANGE_INC.append([10]+list(numpy.arange(20,81,20))+list(numpy.arange(100,2001,100)))
+#ATR Fallback Mode
+RANGE_INC.append(["ON","OFF"])
+#ATR Fallback Time
 RANGE_INC.append([1,2,3,4,5])
-RANGE_INC.append(list(numpy.arange(30,61,10)))
+#AThresh
 RANGE_INC.append(["V-Low", "Low", "Med-Low", "Med", "Med-High", "High", "V-High"])
+#ReactionTime
 RANGE_INC.append([10,20,30,40,50])
+#ResponseFactor
 RANGE_INC.append(list(numpy.arange(1,17,1)))
-RANGE_INC.append(list(numpy.arange(2,137,1)))
+#Recovery Time
+RANGE_INC.append(list(numpy.arange(2,17,1)))
 
 
 #Entries Array
@@ -88,8 +114,8 @@ def Activate_Entries(Mode):
                     Parameter_Entries[i].config(state=NORMAL)
 
 def Values_To_File(Username):
-    user_file = open(Username,"w").close()
-    user_file = open(Username,"a")
+    user_file = open('userdata/'+Username,"w").close()
+    user_file = open('userdata/'+Username,"a")
     for i in range(0,len(Parameters)):
         user_file.write(Parameters[i][:-1])
         user_file.write(": ")
@@ -98,7 +124,7 @@ def Values_To_File(Username):
     user_file.close()
 
 def Load_Values(Username):
-    user_file = open(Username,"r")
+    user_file = open('userdata/'+Username,"r")
     p = user_file.readlines()
     a =""
     for i in range(0,len(Parameters)):
@@ -204,4 +230,4 @@ def PARAMETER_SCREEN(Username):
 
     mainloop()
 
-PARAMETER_SCREEN("kathan")
+#PARAMETER_SCREEN("kathan")
