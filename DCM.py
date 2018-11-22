@@ -11,13 +11,16 @@ from serial import *
 from PIL import Image
 from PIL import ImageTk
 
+w=270
+h=450
+
 LoginScreen = Tk()
-LoginScreen.title("PACEMAKER DCM")
-LoginScreen.geometry("270x350")
+LoginScreen.title("Pacemaker")
+LoginScreen.geometry(str(w)+"x"+str(h))
 
 #FRAMES
-LoginFrame = ttk.LabelFrame(LoginScreen,text="Login",width=250,height=140)
-RegisterFrame = ttk.LabelFrame(LoginScreen,text="Register",width=250,height=195)
+LoginFrame = ttk.LabelFrame(LoginScreen,text="Login",width=w-20,height=120)
+RegisterFrame = ttk.LabelFrame(LoginScreen,text="Register",width=w-20,height=175)
 
 #Widgets
 E1 = ttk.Entry(LoginFrame)                          #Useraname
@@ -26,6 +29,9 @@ E3 = ttk.Entry(RegisterFrame)                       #Username
 E4 = ttk.Entry(RegisterFrame, show="*")             #Password
 E5 = ttk.Entry(RegisterFrame)                       #Verify Username
 E6 = ttk.Entry(RegisterFrame, show="*")             #Verify Password
+
+# change title here
+titleLogo = ImageTk.PhotoImage(Image.open('icons/red_button.png').resize((w-25,h//4),Image.ANTIALIAS))
 
 def Initialize_User(Username):
     Par_File = open("Parameters.txt","r")
@@ -137,16 +143,17 @@ def Register(Username1, Password1, Username2, Password2):
 
 def LOGIN_SCREEN():
 
-
-
-    LoginFrame.place(x=10,y=5)
-    RegisterFrame.place(x=10,y=150)
+    LoginFrame.place(x=10,y=h-310)
+    RegisterFrame.place(x=10,y=h-185)
 
     #LOGIN WIDGETS
     #Labels
     L1 = Label(LoginFrame, text="Username: ").place(x=5,y=5)
     L2 = Label(LoginFrame, text="Password: ").place(x=5,y=30)
 
+    title = Label(LoginScreen, image=titleLogo)
+    #title.place(x=w+30,y=20)
+    title.place(x=10,y=10)
 
 
     B1 = ttk.Button(LoginFrame, text="Login",command=lambda :Check_Cred(E1.get(),E2.get()))

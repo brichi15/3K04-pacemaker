@@ -5,15 +5,21 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+#from graph import *
 import numpy
-import matplotlib
+
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.backend_bases import key_press_handler
+from matplotlib.figure import Figure
+import matplotlib.animation as animation
+
 from PIL import Image
 from PIL import ImageTk
 
 import csv
 
 
-#Variables
+####Variables
 Modes = []
 Activate = []
 RANGE_INC = []
@@ -80,20 +86,15 @@ Par_File = open("Parameters.txt","r")
 Parameters = Par_File.readlines()
 Par_File.close()
 
+
+
+
 #Read in list of modes
 with open('Modes.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         Modes.append(row['Mode'])
         Activate.append(row)
-
-def verify_num(inp):
-    if inp.isnumeric():
-        return True
-    elif inp is "":
-        return True
-    else:
-        return False
 
 def validcmd(wid,arr):
     for i in arr:
@@ -132,29 +133,90 @@ def Load_Values(Username):
         a = p[i][p[i].find(": ")+2:-1]
         Parameter_Entries[i].insert(0,a)
 
+def showegram(Username):
+    #Graph Variables
+    Graph = Tk()
+    Graph.wm_title("egram")
+    fig = Figure(figsize=(5,4), dpi=100)
+    t = numpy.arange(0, 3, .01)
+    a = fig.add_subplot(111)
+    ecanvas = FigureCanvasTkAgg(fig, master=Graph)  # A tk.DrawingArea.
+    ecanvas.draw()
+    ecanvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+    toolbar = NavigationToolbar2Tk(ecanvas, Graph)
+    toolbar.update()
+    ecanvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+
+    def _quit():
+        Graph.quit()     # stops mainloop
+        Graph.destroy()  # this is necessary on Windows to prevent
+                        # Fatal Python Error: PyEval_RestoreThread: NULL tstate
+    def animate(i):
+        pullData = open("egramdata/sample.txt","r").read()
+        dataList = pullData.split('\n')
+        xList = []
+        yList = []
+        for eachLine in dataList:
+            if len(eachLine) > 1:
+                x,y = eachLine.split(',')
+                xList.append(int(x))
+                yList.append(int(y))
+
+        a.clear()
+        a.plot(xList,yList)
+
+    button = Button(master=Graph, text="Quit", command=_quit)
+    button.pack(side=BOTTOM)
+
+    ani = animation.FuncAnimation(fig,animate,interval=1000)
+    mainloop()
+
+
+###### NOT WORKING
+###### WHEN CONNECTION WITH PACEMAKER IS WORKING PLS FILL IN
+
+def isConnected():
+    # if connected here then
+    return False
+    #else:
+    #return False
 
 def PARAMETER_SCREEN(Username):
     ParameterScreen = Tk()
     ParameterScreen.title("Pacemaker Parameters")
     ParameterScreen.geometry("850x330")
 
+    # BUTTONS
     Save_Button = ttk.Button(ParameterScreen,text="Save",command=lambda: Values_To_File(Username))
     Load_Button = ttk.Button(ParameterScreen,text="Load",command=lambda: Load_Values(Username))
+    Show_Graph = ttk.Button(ParameterScreen, text="Show Graph",command=lambda: showegram(Username))
     Load_Button.place(x=95,y=290)
     Save_Button.place(x=15,y=290)
-
+    Show_Graph.place(x=175,y=290)
+    # pictures
     green = ImageTk.PhotoImage(Image.open('icons/green_button.png').resize((25,25),Image.ANTIALIAS))
     red = ImageTk.PhotoImage(Image.open('icons/red_button.png').resize((25,25),Image.ANTIALIAS))
 
-    cON = Label(ParameterScreen, image=green)
+    cON = Label(ParameterScreen, image=green)           # need multiple bc cant place twice
+    cOFF = Label(ParameterScreen, image=red)
     configON = Label(ParameterScreen, image=green)
-    cLabel = Label(ParameterScreen, text='CONNECTED')
-    configLabel = Label(ParameterScreen, text='CONNECTED TO PRECONFIGURED DEVICE')
+    configOFF = Label(ParameterScreen, image=red)
 
-    cON.place(x=300,y=10)
-    cLabel.place(x=350, y=13)
-    configON.place(x=450, y=10)
-    configLabel.place(x=500,y=13)
+    if (isConnected() == True):
+        cText = "CONNECTED"
+        cpText = "CONNECTED TO PRECONFIGURED DEVICE"
+        cON.place(x=300,y=10)
+        configON.place(x=450,y=10)
+    else:
+        cText = "NOT CONNECTED"
+        cpText = "NOT CONNECTED TO PRECONFIGURED DEVICE"
+        cOFF.place(x=300,y=10)
+        configOFF.place(x=450,y=10)
+
+    cLabel = Label(ParameterScreen, text=cText)
+    configLabel = Label(ParameterScreen, text=cpText)
+    cLabel.place(x=335, y=13)
+    configLabel.place(x=485,y=13)
 
     #Generate Entires and Labels
     VAR = []

@@ -4,22 +4,22 @@ Upper Rate Limit: 55
 Maximum Sensor Rate: 55
 Fixed AV Delay: 80
 Dynamic AV Delay: OFF
-Sensed AV Delay Offset: 40
-Atrial Amplitude: -10
-Ventricular Amplitude: 0.5
-Atrial Pulse Width: 1.25
-Ventricular Pulse Width: 0.05
+Sensed AV Delay Offset: OFF
+Atrial Amplitude: 0.5
+Ventricular Amplitude: 4.5
+Atrial Pulse Width: 0.2
+Ventricular Pulse Width: 0.1
 Atrial Sensitivity: 0.25
-Ventricular Sensitivity: 150
+Ventricular Sensitivity: 1.5
 VRP: 150
 ARP: 150
-PVARP: 50
-PVARP Extension: 30
-Hysteresis: 3
+PVARP: 160
+PVARP Extension: OFF
+Hysteresis: 35
 Rate Smoothing: OFF
 ATR Duration: 20
-ATR Fallback Mode: 2
-ATR Fallback Time: 30
+ATR Fallback Mode: OFF
+ATR Fallback Time: 3
 Activity Threshold: Low
 Reaction Time: 10
 Response Factor: 1
