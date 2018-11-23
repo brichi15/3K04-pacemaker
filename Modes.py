@@ -7,7 +7,8 @@ from tkinter import ttk
 from tkinter import messagebox
 #from graph import *
 import numpy
-
+import math
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
@@ -137,38 +138,66 @@ def showegram(Username):
     #Graph Variables
     Graph = Tk()
     Graph.wm_title("egram")
-    fig = Figure(figsize=(5,4), dpi=100)
-    t = numpy.arange(0, 3, .01)
+    fig = Figure(figsize=(7,4), dpi=100)
+
     a = fig.add_subplot(111)
+
+    # make graph look pretty
+    a.grid(True)
+    a.set_title("Electrogram for " + Username)
+    a.set_xlabel("Time")
+    a.set_ylabel("Amplitude")
+
     ecanvas = FigureCanvasTkAgg(fig, master=Graph)  # A tk.DrawingArea.
     ecanvas.draw()
+
+    # toolbars at bottom
     ecanvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
     toolbar = NavigationToolbar2Tk(ecanvas, Graph)
     toolbar.update()
     ecanvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+
+    # write input data to file
+    user_file = open('egramdata/'+Username,'w').close()
+    global tVal,aVal,vVal
+    global tList,aList,vList
+    tVal,aVal,vVal = 0,0,0
+    tList,aList,vList = [],[],[]
+    timeInt = .1
 
     def _quit():
         Graph.quit()     # stops mainloop
         Graph.destroy()  # this is necessary on Windows to prevent
                         # Fatal Python Error: PyEval_RestoreThread: NULL tstate
     def animate(i):
-        pullData = open("egramdata/sample.txt","r").read()
-        dataList = pullData.split('\n')
-        xList = []
-        yList = []
-        for eachLine in dataList:
-            if len(eachLine) > 1:
-                x,y = eachLine.split(',')
-                xList.append(int(x))
-                yList.append(int(y))
+        user_file = open("egramdata/"+Username,"a")
+        global tVal,aVal,vVal
+        global tList,aList,vList
 
+        tVal += timeInt       # x is going up in time
+        aVal = math.sin(tVal)*1000 # a = atrial, v = ventricular
+        vVal = math.cos(tVal)*1000 # HAVE TO BUMP IT UP BC IT WONT PLOT SMALL VALUES, CAN CHANGE AXIS LATER
+
+                                    # change to input values recieved from pacemaker
+        tList.append(tVal)              # append to list to graph and write to datafile
+        aList.append(aVal)
+        vList.append(vVal)
+
+        user_file.write(str(tVal) + "," + str(aVal)+ "," + str(vVal) + "\n")
         a.clear()
-        a.plot(xList,yList)
+        yeet = a.plot(tList[-10:],aList[-10:],tList[-10:],vList[-10:])  # plots last 10 points
+        a.set_ylim([-1100,1100])
+        a.grid()
+        a.set_xlabel("Time")
+        a.set_ylabel("Ampltiude")
+        a.set_title("Electrogram Data for " + Username)
+        return yeet             # blit requires you to return your plot to save resources by not redrawing the whole thing
 
     button = Button(master=Graph, text="Quit", command=_quit)
     button.pack(side=BOTTOM)
 
-    ani = animation.FuncAnimation(fig,animate,interval=1000)
+
+    ani = animation.FuncAnimation(fig,animate,interval=timeInt*100,blit=True)
     mainloop()
 
 
@@ -202,7 +231,7 @@ def PARAMETER_SCREEN(Username):
     configON = Label(ParameterScreen, image=green)
     configOFF = Label(ParameterScreen, image=red)
 
-    if (isConnected() == True):
+    if (isConnected() == True): # DEACTIVATE BUTTONS WHENS FALSE STILL NEEDS TO BE DONE
         cText = "CONNECTED"
         cpText = "CONNECTED TO PRECONFIGURED DEVICE"
         cON.place(x=300,y=10)
@@ -292,4 +321,4 @@ def PARAMETER_SCREEN(Username):
 
     mainloop()
 
-#PARAMETER_SCREEN("kathan")
+PARAMETER_SCREEN("oscar")

@@ -15,7 +15,7 @@ VRP: 320
 ARP: 250
 PVARP: 250
 PVARP Extension: OFF
-Hysteresis: 30
+Hysteresis: OFF
 Rate Smoothing: OFF
 ATR Duration: 20
 ATR Fallback Mode: OFF

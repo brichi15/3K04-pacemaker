@@ -2,7 +2,7 @@ Mode: DDD
 Lower Rate Limit: 60
 Upper Rate Limit: 120
 Maximum Sensor Rate: 120
-Fixed AV Delay: 220
+Fixed AV Delay: 150
 Dynamic AV Delay: OFF
 Sensed AV Delay Offset: OFF
 Atrial Amplitude: 3.5
