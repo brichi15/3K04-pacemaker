@@ -6,7 +6,7 @@ Par_File = open("Parameters.txt","r")
 Parameters = Par_File.readlines()
 Par_File.close()
 
-def Load_Values(Username):
+def SEND_PARAMS(Username):
     user_file = open('userdata/'+Username,"r")
     p = user_file.readlines()
     a = []
@@ -137,6 +137,6 @@ def Load_Values(Username):
 '''    
     
 
-Load_Values("oscar")
+SEND_PARAMS("oscar")
 ##ser.write(bytes(1))
 ##ser.close()
