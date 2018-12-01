@@ -5,6 +5,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import time
 #from graph import *
 import numpy
 import math
@@ -14,6 +15,7 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
 import matplotlib.animation as animation
 import serial
+from struct import *
 
 from PIL import Image
 from PIL import ImageTk
@@ -90,6 +92,10 @@ Par_File = open("Parameters.txt","r")
 Parameters = Par_File.readlines()
 Par_File.close()
 
+##Screen
+ParameterScreen = Tk()
+ParameterScreen.title("Pacemaker Parameters")
+ParameterScreen.geometry("850x330")
 
 
 
@@ -202,10 +208,34 @@ def showegram(Username):
 ###### WHEN CONNECTION WITH PACEMAKER IS WORKING PLS FILL IN
 
 def isConnected():
-    # if connected here then
-    return False
-    #else:
-    #return False
+    try:
+        check = serial.Serial('COM6', baudrate=115200)
+        check.close()
+        return True
+    except:
+        return False
+
+
+def ECHO_PARAMS():
+    try:
+        ser = serial.Serial('COM6', baudrate=115200)
+        ser.timeout =5 
+    except:
+        messagebox.showmessage("Pacemaker Connection Error", "The pacemaker is not connected!")
+        return
+
+    cmd = b'\x16\x45\x49'
+    print(ser.write(cmd))
+    print(ser.write(bytes(54)))
+    a = ser.read(50)
+    print(a)
+    unpacked = list(unpack('>'+'H'*25,a))
+    print(unpacked)
+    ser.close()
+    out_string= ""
+    for i in range(1,len(Parameters)):
+        out_string = out_string+Parameters[i]+ ": " +str(unpacked[i-1])
+
 
 def SEND_PARAMS(Username):
     answer = messagebox.askyesnocancel("Question", "You must save any changes prior to sendinng to pacemaker. Continue?")
@@ -225,7 +255,7 @@ def SEND_PARAMS(Username):
 
     for i in range(0,len(a)):
         if a[i].find('.')>0:
-            b.append(int(round(float(a[i]),1)*1000))
+            b.append(int(round(float(a[i]),2)*1000))
         elif a[i] == 'OFF' and i > 0 :
             b.append(0)
         elif a[i] == 'ON': 
@@ -260,9 +290,9 @@ def SEND_PARAMS(Username):
         elif a[i] == "DDDR": b.append(a[i])
         else:
             try:
-                b.append(int(i))
+                b.append(int(a[i]))
             except ValueError:
-                b.append(i)
+                b.append(a[i])
                   
     byte_b.append(b[0].encode())
     
@@ -274,84 +304,57 @@ def SEND_PARAMS(Username):
 
 
 
+    print(a)
+    print(b)
     print(byte_b)
     print(len(byte_b))
-    #print(b)
     #print(len(a))
 
-
-
-
-    #ser = serial.Serial('COM6', baudrate=115200)
-    #print(ser.name)
-    #cmd = b'\x16\x45\x55\x00'
+    try:
+        ser = serial.Serial('COM6', baudrate=115200)
+        ser.timeout =5 
+    except:
+        messagebox.showinfo("Pacemaker Connection \nError", "The pacemaker is not connected!")
+        return
+    print(ser.name)
     sum1 = 0 
+  
+    cmd = b'\x16\x45\x55'
 
-    #WRITE_TEST
-##    '''
-##    cmd = b'\x16\x45\x55\x00'
-##    a = 10
-##    print(ser.write(cmd))
-##    print(ser.write(bytes(50)))
-##    #print(ser.read())
-##    print(cmd)
-##    #print(ser.read(10))
-##    ser.close()
-##    '''
-    #READ_ECHO
-##    cmd = b'\x16\x45\x49'
-##    print(ser.write(cmd))
-##    print(ser.write(bytes(51)))
-##    a = ser.read(50)
-##    print(a)
-##    #print(cmd)
-##    #print(ser.read(10))
-##    ser.close()
-##'''
-##    #READ_EGRRAM
-##    cmd = b'\x16\x45\x47'
-##    print(ser.write(cmd))
-##    print(ser.write(bytes(51)))
-##    print(ser.read(50))
-##    #print(cmd)
-##    #print(ser.read(10))
-##    ser.close()
-##'''    
-    #WRITE_VALUES
-'''    
-    cmd = b'\x16\x45\x55\x04'
     sum1 = sum1+ ser.write(cmd)
-    for i in range(1,len(byte_b)):
+    for i in range(0,len(byte_b)):
         print(repr(byte_b[i]))
         sum1 =sum1 + ser.write(byte_b[i])
     print("total send:" , sum1)
 
-    cmd1 = b'\x16\x45\x49'
-    print(ser.write(cmd1))
-    print(ser.write(bytes(51)))
-    
-
-    a = ser.read(50)
-    print(a)
-    #print(cmd)
-    #print(ser.read(10))
     ser.close()
-'''    
+
+
+
 
 def PARAMETER_SCREEN(Username):
-    ParameterScreen = Tk()
-    ParameterScreen.title("Pacemaker Parameters")
-    ParameterScreen.geometry("850x330")
+
 
     # BUTTONS
     Save_Button = ttk.Button(ParameterScreen,text="Save",command=lambda: Values_To_File(Username))
     Load_Button = ttk.Button(ParameterScreen,text="Load",command=lambda: Load_Values(Username))
     Show_Graph = ttk.Button(ParameterScreen, text="Show Graph",command=lambda: showegram(Username))
     To_Pacemaker = ttk.Button(ParameterScreen,text="To Pacemaker",command= lambda:SEND_PARAMS(Username))
+    Echo_Parameter = ttk.Button(ParameterScreen, text="Echo",command= lambda:ECHO_PARAMS())
     Load_Button.place(x=95,y=290)
     Save_Button.place(x=15,y=290)
     Show_Graph.place(x=175,y=290)
     To_Pacemaker.place(x=257, y=290)
+    Echo_Parameter.place(x=350,y=290)
+
+    # pictures
+    green = ImageTk.PhotoImage(Image.open('icons/green_button.png').resize((25,25),Image.ANTIALIAS))
+    red = ImageTk.PhotoImage(Image.open('icons/red_button.png').resize((25,25),Image.ANTIALIAS))
+
+    cON = Label(ParameterScreen, image=green)           # need multiple bc cant place twice
+    cOFF = Label(ParameterScreen, image=red)
+    configON = Label(ParameterScreen, image=green)
+    configOFF = Label(ParameterScreen, image=red)
 
 
 
@@ -365,30 +368,30 @@ def PARAMETER_SCREEN(Username):
         To_Pacemaker.config(state=DISABLED)
         return False
 
-    # pictures
-    green = ImageTk.PhotoImage(Image.open('icons/green_button.png').resize((25,25),Image.ANTIALIAS))
-    red = ImageTk.PhotoImage(Image.open('icons/red_button.png').resize((25,25),Image.ANTIALIAS))
 
-    cON = Label(ParameterScreen, image=green)           # need multiple bc cant place twice
-    cOFF = Label(ParameterScreen, image=red)
-    configON = Label(ParameterScreen, image=green)
-    configOFF = Label(ParameterScreen, image=red)
+    def connection():
+        if (isConnected() == True): # DEACTIVATE BUTTONS WHENS FALSE STILL NEEDS TO BE DONE
+            cText = "CONNECTED        "
+            cpText = "CONNECTED TO PRECONFIGURED DEVICE          "
+            cON.place(x=300,y=10)
+            cOFF.place_forget()
+            configON.place(x=450,y=10)
+            configOFF.place_forget()
+        else:
+            cText = "NOT CONNECTED"
+            cpText = "NOT CONNECTED TO PRECONFIGURED DEVICE"
+            cOFF.place(x=300,y=10)
+            cON.place_forget()
+            configOFF.place(x=450,y=10)
+            configON.place_forget()
 
-    if (isConnected() == True): # DEACTIVATE BUTTONS WHENS FALSE STILL NEEDS TO BE DONE
-        cText = "CONNECTED"
-        cpText = "CONNECTED TO PRECONFIGURED DEVICE"
-        cON.place(x=300,y=10)
-        configON.place(x=450,y=10)
-    else:
-        cText = "NOT CONNECTED"
-        cpText = "NOT CONNECTED TO PRECONFIGURED DEVICE"
-        cOFF.place(x=300,y=10)
-        configOFF.place(x=450,y=10)
-
-    cLabel = Label(ParameterScreen, text=cText)
-    configLabel = Label(ParameterScreen, text=cpText)
-    cLabel.place(x=335, y=13)
-    configLabel.place(x=485,y=13)
+        cLabel = Label(ParameterScreen, text=cText)
+        configLabel = Label(ParameterScreen, text=cpText)
+        cLabel.place(x=335, y=13)
+        configLabel.place(x=485,y=13)
+        ParameterScreen.after(1000,connection)
+    
+    
 
     #Generate Entires and Labels
     VAR = []
@@ -458,11 +461,14 @@ def PARAMETER_SCREEN(Username):
     #Mode_Select = ttk.OptionMenu(ParameterScreen, variable,*Modes,command= lambda a :Activate_Entries(variable.get()))
     #variable.set(Modes[9]) # default value
     Activate_Entries(Parameter_Entries[0].get())
+    
+    ParameterScreen.after(1000, connection)
+    ParameterScreen.mainloop()
 
     #Mode_Select.place(x=30,y=10)
 
 
 
-    mainloop()
+
 
 PARAMETER_SCREEN("oscar")
