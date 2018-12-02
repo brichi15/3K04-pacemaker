@@ -6,7 +6,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from Modes import PARAMETER_SCREEN
+import Modes
 from serial import *
 from PIL import Image
 from PIL import ImageTk
@@ -88,7 +88,7 @@ def Check_Cred(Username,Password):
         if Current[0] == Username and Current[1] == Password:
             messagebox.showinfo("Login", "You are logged in!")
             LoginScreen.destroy()
-            PARAMETER_SCREEN(Username)
+            Modes.PARAMETER_SCREEN(Username)
             return True
     messagebox.showerror("Invalid Credentials", "Username or Password is incorrect")
     E1.delete(0,END)
@@ -127,7 +127,7 @@ def Register(Username1, Password1, Username2, Password2):
 
         Initialize_User(Username1)
         Create_New_User(Username1,Password1)
-        PARAMETER_SCREEN(Username2)
+        Modes.PARAMETER_SCREEN(Username2)
 
     else:
         messagebox.showerror("Invalid Credentials", "This user already exists")
@@ -192,6 +192,7 @@ def LOGIN_SCREEN():
     E5.config(validate="key",validatecommand=(valinp,"%P"))
     E6.config(validate="key",validatecommand=(valinp,"%P"))
 
-    mainloop()
+    LoginScreen.mainloop()
+
 
 LOGIN_SCREEN()

@@ -23,7 +23,7 @@ from PIL import ImageTk
 import csv
 
 units = ["", "(ppm)", "(ppm)", "(ppm)", "(ms)" , "", "(ms)", 
-"(ms)", "(V)","(V)", "(ms)", "(mV)","(ms)","(ms)","(ms)", "(ms)",
+"(ms)", "(V)","(ms)", "(ms)", "(mV)","(ms)","(ms)","(ms)", "(ms)",
 "(ppm)","(%)", "","(cc)", "(min)", "(ms)", "", "(sec)", "", "(min)"]
 ####Variables
 Modes = []
@@ -50,7 +50,7 @@ RANGE_INC.append(list(numpy.arange(3.5,7.1,0.5)))
 #Atrial Pulse width
 RANGE_INC.append([0.05]+(list(numpy.arange(0.1,2.1,0.1))))
 #Ventricular Pulse width
-RANGE_INC.append(list(numpy.arange(0.1,2.0,0.1)))
+RANGE_INC.append(list(numpy.arange(0.1,10.1,0.1)))
 #Atrial Sensitivity
 RANGE_INC.append([0.25,0.5,0.75])
 #Ventricular Sensitivity
@@ -166,7 +166,7 @@ def showegram(Username):
     global tList,aList,vList
     tVal,aVal,vVal = 0,0,0
     tList,aList,vList = [],[],[]
-    timeInt = .1
+    timeInt = .5
 
     def _quit():
         Graph.quit()     # stops mainloop
@@ -183,13 +183,31 @@ def showegram(Username):
 
                                     # change to input values recieved from pacemaker
         tList.append(tVal)              # append to list to graph and write to datafile
-        aList.append(aVal)
-        vList.append(vVal)
+        #aList.append(aVal)
+        #vList.append(vVal)
+
+
+        try:
+            ser = serial.Serial('COM6', baudrate=115200)
+            ser.timeout =5 
+        except:
+            messagebox.showinfo("Pacemaker Connection Error", "The pacemaker is not connected!")
+            return
+
+        cmd = b'\x16\x45\x47'
+        ser.write(cmd)
+        ser.write(bytes(54))
+        sent_info = ser.readline(16)
+        info = list(unpack('dd',sent_info))
+        ser.close()
+
+        aList.append(info[0]*3.3)
+        vList.append(info[1]*3.3)
 
         user_file.write(str(tVal) + "," + str(aVal)+ "," + str(vVal) + "\n")
         a.clear()
         yeet = a.plot(tList[-10:],aList[-10:],tList[-10:],vList[-10:])  # plots last 10 points
-        a.set_ylim([-1100,1100])
+        a.set_ylim([-3.3,3.3])
         a.grid()
         a.set_xlabel("Time")
         a.set_ylabel("Ampltiude")
@@ -221,7 +239,7 @@ def ECHO_PARAMS():
         ser = serial.Serial('COM6', baudrate=115200)
         ser.timeout =5 
     except:
-        messagebox.showmessage("Pacemaker Connection Error", "The pacemaker is not connected!")
+        messagebox.showinfo("Pacemaker Connection Error", "The pacemaker is not connected!")
         return
 
     cmd = b'\x16\x45\x49'
@@ -234,7 +252,9 @@ def ECHO_PARAMS():
     ser.close()
     out_string= ""
     for i in range(1,len(Parameters)):
-        out_string = out_string+Parameters[i]+ ": " +str(unpacked[i-1])
+        out_string = out_string+Parameters[i][:-1]+ ": " +str(unpacked[i-1])+"\n"
+    
+    print(out_string)
 
 
 def SEND_PARAMS(Username):
@@ -328,6 +348,7 @@ def SEND_PARAMS(Username):
     print("total send:" , sum1)
 
     ser.close()
+    time.sleep(1)
 
 
 
@@ -469,6 +490,4 @@ def PARAMETER_SCREEN(Username):
 
 
 
-
-
-PARAMETER_SCREEN("oscar")
+#PARAMETER_SCREEN("oscar")

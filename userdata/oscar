@@ -1,14 +1,14 @@
-Mode: DDDR
-Lower Rate Limit: 68
-Upper Rate Limit: 65
+Mode: VOO
+Lower Rate Limit: 60
+Upper Rate Limit: 120
 Maximum Sensor Rate: 120
 Fixed AV Delay: 150
 Dynamic AV Delay: OFF
 Sensed AV Delay Offset: OFF
 Atrial Amplitude: 3.5
-Ventricular Amplitude: 5.5
+Ventricular Amplitude: 3.5
 Atrial Pulse Width: 0.4
-Ventricular Pulse Width: 0.4
+Ventricular Pulse Width: 10.0
 Atrial Sensitivity: 0.75
 Ventricular Sensitivity: 3.5
 VRP: 290
